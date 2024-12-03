@@ -2,9 +2,8 @@ package com.example.supplier.util;
 
 public class CodigoUtil {
 
-    public static boolean isValidCNPJ(long cnpj) {
-        String cnpjStr = String.format("%014d", cnpj);
-        if (cnpjStr.length() != 14) {
+    public static boolean isValidCNPJ(String cnpj) {
+        if (cnpj.length() != 14) {
             return false;
         }
 
@@ -14,7 +13,14 @@ public class CodigoUtil {
         try {
             int sum = 0;
             for (int i = 0; i < 12; i++) {
-                sum += Character.getNumericValue(cnpjStr.charAt(i)) * weight1[i];
+                char c = cnpj.charAt(i);
+                if (Character.isDigit(c)) {
+                    sum += Character.getNumericValue(c) * weight1[i];
+                } else if (Character.isUpperCase(c)) {
+                    sum += (c - 48) * weight1[i];
+                } else {
+                    return false;
+                }
             }
 
             int mod = sum % 11;
@@ -22,20 +28,27 @@ public class CodigoUtil {
 
             sum = 0;
             for (int i = 0; i < 13; i++) {
-                sum += Character.getNumericValue(cnpjStr.charAt(i)) * weight2[i];
+                char c = cnpj.charAt(i);
+                if (Character.isDigit(c)) {
+                    sum += Character.getNumericValue(c) * weight2[i];
+                } else if (Character.isUpperCase(c)) {
+                    sum += (c - 48) * weight2[i];
+                } else {
+                    return false;
+                }
             }
 
             mod = sum % 11;
             char secondDigit = (mod < 2) ? '0' : (char) ((11 - mod) + '0');
 
-            return cnpjStr.charAt(12) == firstDigit && cnpjStr.charAt(13) == secondDigit;
+            return cnpj.charAt(12) == firstDigit && cnpj.charAt(13) == secondDigit;
         } catch (Exception e) {
             return false;
         }
     }
 
     public static void main(String[] args) {
-        long cnpj = 12345678000195L; // Example CNPJ
+        String cnpj = "12345678000195"; // Example CNPJ
         System.out.println("CNPJ is valid: " + isValidCNPJ(cnpj));
     }
 }
