@@ -91,7 +91,7 @@ const SupplierForm = () => {
             <form onSubmit={handleSubmit}>
                 <input type="text" name="nome" placeholder="Nome" value={supplier.nome} onChange={handleChange} required />
                 <InputMask
-                    mask="99.999.999/9999-99"
+                    mask="**.***.***/****-99"
                     value={supplier.cnpj}
                     onChange={handleChange}
                 >
