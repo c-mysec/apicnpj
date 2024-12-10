@@ -2,9 +2,11 @@ package com.example.supplier.util;
 
 public class CodigoUtil {
 
-    public static boolean isValidCNPJ(long cnpj) {
-        String cnpjStr = String.format("%014d", cnpj);
-        if (cnpjStr.length() != 14) {
+    public static boolean isValidCNPJ(String cnpj) {
+        cnpj = cnpj.toUpperCase();
+        cnpj = cnpj.replaceAll("[^A-Z0-9]", "");
+
+        if (cnpj.length() != 14) {
             return false;
         }
 
@@ -14,7 +16,8 @@ public class CodigoUtil {
         try {
             int sum = 0;
             for (int i = 0; i < 12; i++) {
-                sum += Character.getNumericValue(cnpjStr.charAt(i)) * weight1[i];
+                int value = cnpj.charAt(i) - 48;
+                sum += value * weight1[i];
             }
 
             int mod = sum % 11;
@@ -22,20 +25,21 @@ public class CodigoUtil {
 
             sum = 0;
             for (int i = 0; i < 13; i++) {
-                sum += Character.getNumericValue(cnpjStr.charAt(i)) * weight2[i];
+                int value = cnpj.charAt(i) - 48;
+                sum += value * weight2[i];
             }
 
             mod = sum % 11;
             char secondDigit = (mod < 2) ? '0' : (char) ((11 - mod) + '0');
 
-            return cnpjStr.charAt(12) == firstDigit && cnpjStr.charAt(13) == secondDigit;
+            return cnpj.charAt(12) == firstDigit && cnpj.charAt(13) == secondDigit;
         } catch (Exception e) {
             return false;
         }
     }
 
     public static void main(String[] args) {
-        long cnpj = 12345678000195L; // Example CNPJ
+        String cnpj = "12345678000195"; // Example CNPJ
         System.out.println("CNPJ is valid: " + isValidCNPJ(cnpj));
     }
 }
