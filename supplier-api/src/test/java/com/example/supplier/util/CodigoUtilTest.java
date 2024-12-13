@@ -1,12 +1,12 @@
 package com.example.supplier.util;
 
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 class CodigoUtilTest {
 
@@ -60,5 +60,28 @@ class CodigoUtilTest {
     @Test
     void isValidCNPJ_WithLeadingAndTrailingSpaces_ShouldReturnTrue() {
         assertTrue(CodigoUtil.isValidCNPJ("  12.345.678/0001-95  ".toUpperCase()), "CNPJ with leading and trailing spaces should return true");
+    }
+
+    public static boolean isValidCNPJ(String cnpj) {
+        if (cnpj == null || cnpj.isEmpty()) {
+            return false;
+        }
+        cnpj = cnpj.replaceAll("[^A-Z0-9]", "").toUpperCase();
+        if (cnpj.length() != 14) {
+            return false;
+        }
+        int[] digits = new int[14];
+        for (int i = 0; i < 14; i++) {
+            digits[i] = cnpj.charAt(i) - 48;
+        }
+        int sum = 0;
+        int factor = 5;
+        for (int i = 0; i < 12; i++) {
+            sum += digits[i] * factor;
+            factor = (factor == 2) ? 9 : factor - 1;
+        }
+        int remainder = sum % 11;
+        int checkDigit = (remainder < 2) ? 0 : 11 - remainder;
+        return digits[12] == checkDigit;
     }
 }
