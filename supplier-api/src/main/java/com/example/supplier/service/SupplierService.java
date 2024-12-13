@@ -16,7 +16,7 @@ public class SupplierService {
     private SupplierRepository supplierRepository;
 
     public Supplier createSupplier(Supplier supplier) {
-        if (!CodigoUtil.isValidCNPJ(supplier.getCnpj())) {
+        if (!CodigoUtil.isValidCNPJ(supplier.getCnpj().toUpperCase())) {
             throw new IllegalArgumentException("Invalid CNPJ");
         }
         return supplierRepository.save(supplier);
@@ -31,13 +31,13 @@ public class SupplierService {
     }
 
     public Supplier updateSupplier(Long id, Supplier supplierDetails) {
-        if (!CodigoUtil.isValidCNPJ(supplierDetails.getCnpj())) {
+        if (!CodigoUtil.isValidCNPJ(supplierDetails.getCnpj().toUpperCase())) {
             throw new IllegalArgumentException("Invalid CNPJ");
         }
         Supplier supplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Supplier not found with id " + id));
         supplier.setNome(supplierDetails.getNome());
-        supplier.setCnpj(supplierDetails.getCnpj());
+        supplier.setCnpj(supplierDetails.getCnpj().toUpperCase());
         supplier.setNomeContato(supplierDetails.getNomeContato());
         supplier.setEmailContato(supplierDetails.getEmailContato());
         supplier.setTelefoneContato(supplierDetails.getTelefoneContato());
