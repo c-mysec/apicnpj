@@ -32,7 +32,7 @@ const SupplierForm = () => {
         let pos = length - 7;
 
         for (let i = length; i >= 1; i--) {
-            sum += (numbers.charAt(length - i).charCodeAt(0) - 48) * pos--;
+            sum += (cleanedCNPJ.charCodeAt(length - i) - 48) * pos--;
             if (pos < 2) pos = 9;
         }
 
@@ -45,7 +45,7 @@ const SupplierForm = () => {
         pos = length - 7;
 
         for (let i = length; i >= 1; i--) {
-            sum += (numbers.charAt(length - i).charCodeAt(0) - 48) * pos--;
+            sum += (cleanedCNPJ.charCodeAt(length - i) - 48) * pos--;
             if (pos < 2) pos = 9;
         }
 
