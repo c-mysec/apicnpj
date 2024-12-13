@@ -2,8 +2,8 @@ package com.example.supplier.util;
 
 public class CodigoUtil {
 
-    public static boolean isValidCNPJ(long cnpj) {
-        String cnpjStr = String.format("%014d", cnpj);
+    public static boolean isValidCNPJ(String cnpj) {
+        String cnpjStr = cnpj.toUpperCase().replaceAll("[^A-Z0-9]", "");
         if (cnpjStr.length() != 14) {
             return false;
         }
@@ -14,7 +14,7 @@ public class CodigoUtil {
         try {
             int sum = 0;
             for (int i = 0; i < 12; i++) {
-                sum += Character.getNumericValue(cnpjStr.charAt(i)) * weight1[i];
+                sum += (cnpjStr.charAt(i) - 48) * weight1[i];
             }
 
             int mod = sum % 11;
@@ -22,7 +22,7 @@ public class CodigoUtil {
 
             sum = 0;
             for (int i = 0; i < 13; i++) {
-                sum += Character.getNumericValue(cnpjStr.charAt(i)) * weight2[i];
+                sum += (cnpjStr.charAt(i) - 48) * weight2[i];
             }
 
             mod = sum % 11;
@@ -35,7 +35,7 @@ public class CodigoUtil {
     }
 
     public static void main(String[] args) {
-        long cnpj = 12345678000195L; // Example CNPJ
+        String cnpj = "12345678000195"; // Example CNPJ
         System.out.println("CNPJ is valid: " + isValidCNPJ(cnpj));
     }
 }
