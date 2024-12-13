@@ -15,12 +15,12 @@ const SupplierForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setSupplier({ ...supplier, [name]: value });
+        setSupplier({ ...supplier, [name]: value.toUpperCase() });
     };
 
     const validateCNPJ = (cnpj) => {
-        // Remove non-numeric characters
-        const cleanedCNPJ = cnpj.replace(/\D/g, '');
+        // Remove non-alphanumeric characters
+        const cleanedCNPJ = cnpj.replace(/\W/g, '');
         // Check if CNPJ has 14 digits
         if (cleanedCNPJ.length !== 14) {
             return false;
@@ -34,7 +34,7 @@ const SupplierForm = () => {
         let pos = length - 7;
 
         for (let i = length; i >= 1; i--) {
-            sum += numbers.charAt(length - i) * pos--;
+            sum += (numbers.charAt(length - i).charCodeAt(0) - 48) * pos--;
             if (pos < 2) pos = 9;
         }
 
@@ -47,7 +47,7 @@ const SupplierForm = () => {
         pos = length - 7;
 
         for (let i = length; i >= 1; i--) {
-            sum += numbers.charAt(length - i) * pos--;
+            sum += (numbers.charAt(length - i).charCodeAt(0) - 48) * pos--;
             if (pos < 2) pos = 9;
         }
 
@@ -91,7 +91,7 @@ const SupplierForm = () => {
             <form onSubmit={handleSubmit}>
                 <input type="text" name="nome" placeholder="Nome" value={supplier.nome} onChange={handleChange} required />
                 <InputMask
-                    mask="99.999.999/9999-99"
+                    mask="**.***.***/****-99"
                     value={supplier.cnpj}
                     onChange={handleChange}
                 >
