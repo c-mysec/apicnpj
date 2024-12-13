@@ -9,7 +9,7 @@ export const getAllSuppliers = async () => {
 };
 
 export const createSupplier = async (supplier) => {
-    // Remove non-numeric characters from CNPJ
+    // Remove non-numeric characters from CNPJ and convert to uppercase
     const cleanedSupplier = {
         ...supplier,
         cnpj: supplier.cnpj.replace(/\W/g, '').toUpperCase()

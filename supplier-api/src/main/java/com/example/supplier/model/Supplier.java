@@ -11,7 +11,6 @@ public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nome;
     private String cnpj;
     private String nomeContato;
@@ -39,7 +38,7 @@ public class Supplier {
     }
 
     public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+        this.cnpj = cnpj.toUpperCase();
     }
 
     public String getNomeContato() {

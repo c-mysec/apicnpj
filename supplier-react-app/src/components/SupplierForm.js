@@ -19,14 +19,12 @@ const SupplierForm = () => {
     };
 
     const validateCNPJ = (cnpj) => {
-        // Remove non-alphanumeric characters
         const cleanedCNPJ = cnpj.replace(/\W/g, '');
-        // Check if CNPJ has 14 digits
+
         if (cleanedCNPJ.length !== 14) {
             return false;
         }
-        // Add your custom validation logic for the 2-digit code here
-        // For example, you can check if the validation code is "00"
+
         let length = cleanedCNPJ.length - 2;
         let numbers = cleanedCNPJ.substring(0, length);
         let digits = cleanedCNPJ.substring(length);
@@ -39,7 +37,7 @@ const SupplierForm = () => {
         }
 
         let result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-        if (result != digits.charAt(0)) return false;
+        if (result !== digits.charAt(0)) return false;
 
         length = length + 1;
         numbers = cleanedCNPJ.substring(0, length);
@@ -52,7 +50,7 @@ const SupplierForm = () => {
         }
 
         result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-        if (result != digits.charAt(1)) return false;
+        if (result !== digits.charAt(1)) return false;
         return true;
     };
 
