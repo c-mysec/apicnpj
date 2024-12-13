@@ -19,7 +19,7 @@ const SupplierForm = () => {
     };
 
     const validateCNPJ = (cnpj) => {
-        const cleanedCNPJ = cnpj.replace(/\W/g, '');
+        const cleanedCNPJ = cnpj.replace(/[\W]/g, '');
 
         if (cleanedCNPJ.length !== 14) {
             return false;
@@ -37,7 +37,7 @@ const SupplierForm = () => {
         }
 
         let result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-        if (result !== digits.charAt(0)) return false;
+        if (result !== parseInt(digits.charAt(0))) return false;
 
         length = length + 1;
         numbers = cleanedCNPJ.substring(0, length);
@@ -50,7 +50,7 @@ const SupplierForm = () => {
         }
 
         result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-        if (result !== digits.charAt(1)) return false;
+        if (result !== parseInt(digits.charAt(1))) return false;
         return true;
     };
 
