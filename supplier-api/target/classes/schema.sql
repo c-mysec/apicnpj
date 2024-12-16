@@ -1,7 +1,7 @@
 CREATE TABLE SUPPLIER (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     Nome VARCHAR(255) NOT NULL,
-    Cnpj VARCHAR(255) NOT NULL,
+    Cnpj VARCHAR(255) COLLATE utf8_general_ci NOT NULL,
     NomeContato VARCHAR(255),
     EmailContato VARCHAR(255),
     TelefoneContato VARCHAR(20)

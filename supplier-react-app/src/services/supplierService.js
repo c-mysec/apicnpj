@@ -1,3 +1,4 @@
+```javascript
 const serverUrl = 'https://sturdy-spork-v54qqr69q3pw95-8080.app.github.dev';
 
 export const getAllSuppliers = async () => {
@@ -28,3 +29,4 @@ export const createSupplier = async (supplier) => {
 
     return await response.json();
 };
+```
