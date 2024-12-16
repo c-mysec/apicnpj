@@ -15,18 +15,16 @@ const SupplierForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setSupplier({ ...supplier, [name]: value });
+        setSupplier({ ...supplier, [name]: value.toUpperCase() });
     };
 
     const validateCNPJ = (cnpj) => {
-        // Remove non-numeric characters
-        const cleanedCNPJ = cnpj.replace(/\D/g, '');
-        // Check if CNPJ has 14 digits
+        const cleanedCNPJ = cnpj.replace(/[\W]/g, '');
+
         if (cleanedCNPJ.length !== 14) {
             return false;
         }
-        // Add your custom validation logic for the 2-digit code here
-        // For example, you can check if the validation code is "00"
+
         let length = cleanedCNPJ.length - 2;
         let numbers = cleanedCNPJ.substring(0, length);
         let digits = cleanedCNPJ.substring(length);
@@ -34,12 +32,12 @@ const SupplierForm = () => {
         let pos = length - 7;
 
         for (let i = length; i >= 1; i--) {
-            sum += numbers.charAt(length - i) * pos--;
+            sum += (cleanedCNPJ.charCodeAt(length - i) - 48) * pos--;
             if (pos < 2) pos = 9;
         }
 
         let result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-        if (result != digits.charAt(0)) return false;
+        if (result !== parseInt(digits.charAt(0))) return false;
 
         length = length + 1;
         numbers = cleanedCNPJ.substring(0, length);
@@ -47,12 +45,12 @@ const SupplierForm = () => {
         pos = length - 7;
 
         for (let i = length; i >= 1; i--) {
-            sum += numbers.charAt(length - i) * pos--;
+            sum += (cleanedCNPJ.charCodeAt(length - i) - 48) * pos--;
             if (pos < 2) pos = 9;
         }
 
         result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-        if (result != digits.charAt(1)) return false;
+        if (result !== parseInt(digits.charAt(1))) return false;
         return true;
     };
 
@@ -91,9 +89,10 @@ const SupplierForm = () => {
             <form onSubmit={handleSubmit}>
                 <input type="text" name="nome" placeholder="Nome" value={supplier.nome} onChange={handleChange} required />
                 <InputMask
-                    mask="99.999.999/9999-99"
+                    mask="**.***.***/****-99"
                     value={supplier.cnpj}
                     onChange={handleChange}
+                    maskChar={null}
                 >
                     {() => <input type="text" name="cnpj" placeholder="CNPJ" required />}
                 </InputMask>
