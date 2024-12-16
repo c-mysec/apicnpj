@@ -1,3 +1,4 @@
+```javascript
 const serverUrl = 'https://sturdy-spork-v54qqr69q3pw95-8080.app.github.dev';
 
 export const getAllSuppliers = async () => {
@@ -9,10 +10,9 @@ export const getAllSuppliers = async () => {
 };
 
 export const createSupplier = async (supplier) => {
-    // Remove non-numeric characters from CNPJ
     const cleanedSupplier = {
         ...supplier,
-        cnpj: supplier.cnpj.replace(/\D/g, '')
+        cnpj: supplier.cnpj.replace(/[\W_]/g, '').toUpperCase()
     };
 
     const response = await fetch(`${serverUrl}/api/suppliers`, {
@@ -29,3 +29,4 @@ export const createSupplier = async (supplier) => {
 
     return await response.json();
 };
+```
