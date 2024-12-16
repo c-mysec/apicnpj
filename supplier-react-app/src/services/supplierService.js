@@ -11,7 +11,7 @@ export const getAllSuppliers = async () => {
 export const createSupplier = async (supplier) => {
     const cleanedSupplier = {
         ...supplier,
-        cnpj: supplier.cnpj.replace(/\W/g, '').toUpperCase()
+        cnpj: supplier.cnpj.replace(/[\W_]/g, '').toUpperCase()
     };
 
     const response = await fetch(`${serverUrl}/api/suppliers`, {

@@ -35,7 +35,7 @@ public class CodigoUtil {
     }
 
     public static void main(String[] args) {
-        String cnpj = "12345678000195"; // Example CNPJ
+        String cnpj = "12345678000195";
         System.out.println("CNPJ is valid: " + isValidCNPJ(cnpj));
     }
 }
