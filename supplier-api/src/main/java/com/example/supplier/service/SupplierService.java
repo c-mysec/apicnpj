@@ -19,6 +19,7 @@ public class SupplierService {
         if (!CodigoUtil.isValidCNPJ(supplier.getCnpj())) {
             throw new IllegalArgumentException("Invalid CNPJ");
         }
+        supplier.setCnpj(supplier.getCnpj().toUpperCase());
         return supplierRepository.save(supplier);
     }
 
@@ -34,6 +35,7 @@ public class SupplierService {
         if (!CodigoUtil.isValidCNPJ(supplierDetails.getCnpj())) {
             throw new IllegalArgumentException("Invalid CNPJ");
         }
+        supplierDetails.setCnpj(supplierDetails.getCnpj().toUpperCase());
         Supplier supplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Supplier not found with id " + id));
         supplier.setNome(supplierDetails.getNome());
