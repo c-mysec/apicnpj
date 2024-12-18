@@ -37,7 +37,7 @@ public class SupplierService {
         Supplier supplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Supplier not found with id " + id));
         supplier.setNome(supplierDetails.getNome());
-        supplier.setCnpj(supplierDetails.getCnpj());
+        supplier.setCnpj(supplierDetails.getCnpj().toUpperCase());
         supplier.setNomeContato(supplierDetails.getNomeContato());
         supplier.setEmailContato(supplierDetails.getEmailContato());
         supplier.setTelefoneContato(supplierDetails.getTelefoneContato());
