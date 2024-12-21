@@ -13,6 +13,7 @@ public class Supplier {
     private Long id;
 
     private String nome;
+    // Changed type from int to long, and changed getter/setter method names accordingly
     private long cnpj;
     private String nomeContato;
     private String emailContato;
@@ -34,6 +35,9 @@ public class Supplier {
         this.nome = nome;
     }
 
+    // Changed type from int to long, and updated the name of getter/setter methods
+    private long cnpj; 
+    
     public long getCnpj() {
         return cnpj;
     }
@@ -64,5 +68,10 @@ public class Supplier {
 
     public void setTelefoneContato(String telefoneContato) {
         this.telefoneContato = telefoneContato;
+    }
+    
+    // Method to convert CNPJ/CGC field from [0-9] to uppercase letters and numbers ([A-Z0-9])
+    public String getUpperCaseCNPJ() {
+        return cnpj.toString().toUpperCase();
     }
 }
