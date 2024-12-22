@@ -13,7 +13,10 @@ public class Supplier {
     private Long id;
 
     private String nome;
-    private long cnpj;
+    
+    // cnpj field now supports uppercase letters and numbers ([A-Z0-9])
+    private String cnpj;
+    
     private String nomeContato;
     private String emailContato;
     private String telefoneContato;
@@ -33,13 +36,18 @@ public class Supplier {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    public long getCnpj() {
-        return cnpj;
+    
+    // cnpj now uses the new regex pattern to support uppercase letters and numbers ([A-Z0-9])
+    public String getCnpj() {
+        return cnpj != null ? cnpj : "";
     }
 
-    public void setCnpj(long cnpj) {
+    public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
+        // convert CNPJ to uppercase and store the value
+        if (cnpj != null && !cnpj.isEmpty()) {
+            this.cnpj = cnpj.toUpperCase();
+        }
     }
 
     public String getNomeContato() {
