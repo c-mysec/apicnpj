@@ -13,7 +13,7 @@ public class Supplier {
     private Long id;
 
     private String nome;
-    private long cnpj;
+    private String cnpj; // Change the type from long to String, since CNPJ can contain letters now
     private String nomeContato;
     private String emailContato;
     private String telefoneContato;
@@ -34,12 +34,12 @@ public class Supplier {
         this.nome = nome;
     }
 
-    public long getCnpj() {
+    public String getCnpj() { // Use string type for CNPJ that can contain letters and numbers
         return cnpj;
     }
 
-    public void setCnpj(long cnpj) {
-        this.cnpj = cnpj;
+    public void setCnpj(String cnpj) {
+        this.cnpj = (cnpj == null || cnpj.length() != 14) ? "" : cnpj.toUpperCase(); // Convert CNPJ input to uppercase if it is not empty and has exactly 14 characters
     }
 
     public String getNomeContato() {
