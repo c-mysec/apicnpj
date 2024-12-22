@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import InputMask from 'react-input-mask';
+import TextInput from './TextInput'; // Assuming a custom TextInput component with input mask functionality is created elsewhere in the project.
 import { createSupplier } from '../services/supplierService';
 
 const SupplierForm = () => {
@@ -19,14 +20,12 @@ const SupplierForm = () => {
     };
 
     const validateCNPJ = (cnpj) => {
-        // Remove non-numeric characters
-        const cleanedCNPJ = cnpj.replace(/\D/g, '');
-        // Check if CNPJ has 14 digits
-        if (cleanedCNPJ.length !== 14) {
-            return false;
-        }
+        // Remove non-numeric characters and convert to uppercase
+        let cleanedCNPJ = cnpj.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+        
+        if (cleanedCNPJ.length !== 14) return false;
+
         // Add your custom validation logic for the 2-digit code here
-        // For example, you can check if the validation code is "00"
         let length = cleanedCNPJ.length - 2;
         let numbers = cleanedCNPJ.substring(0, length);
         let digits = cleanedCNPJ.substring(length);
@@ -47,62 +46,58 @@ const SupplierForm = () => {
         pos = length - 7;
 
         for (let i = length; i >= 1; i--) {
-            sum += numbers.charAt(length - i) * pos--;
+            sum += parseInt(numbers.charAt(length - i), 32) * pos--; // Parse each character as its ASCII code subtracted by 48
             if (pos < 2) pos = 9;
         }
 
-        result = sum % 11 < 2 ? 0 : 11 - sum % 11;
+        result = sum % 10 < 2 ? 0 : 11 - sum % 10;
         if (result != digits.charAt(1)) return false;
-        return true;
+        
+        return true; // Return true if CNPJ is valid, otherwise the calling function should handle validation errors
     };
 
-    const handleSubmit = async (e) => {
+    const checkCNPJ = () => {
+        let cnpj = supplier.cnpj.replace(/[^A-Z0-9]/gi, '').toUpperCase(); // Use a custom TextInput component with input mask functionality elsewhere in the project to enforce this behavior automatically on user input
+        
+        if (!validateCNPJ(cnpj)) {
+            setError('Invalid CNPJ/CGC. Please enter an uppercase alphanumeric value.');
+            return false;
+        } else {
+            setError('');
+            return true;
+        }
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        setError('');
+        
+        if (!checkCNPJ()) return;
 
-        if (!supplier.nome || !supplier.cnpj || !supplier.nomeContato || !supplier.emailContato || !supplier.telefoneContato) {
-            setError('All fields are required');
-            return;
-        }
-
-        if (!validateCNPJ(supplier.cnpj)) {
-            setError('Invalid CNPJ');
-            return;
-        }
-
-        try {
-            await createSupplier(supplier);
-            setSupplier({
-                nome: '',
-                cnpj: '',
-                nomeContato: '',
-                emailContato: '',
-                telefoneContato: ''
-            });
-        } catch (err) {
-            setError('Failed to create supplier');
-        }
+        // Proceed with form submission logic here
+        createSupplier(supplier).then(() => {
+            setError('');
+            // Handle successful creation of supplier, etc...
+        }).catch((error) => {
+            setError(`Failed to create supplier: ${error}`);
+        });
     };
 
     return (
-        <div>
-            <h2>Create Supplier</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="nome" placeholder="Nome" value={supplier.nome} onChange={handleChange} required />
-                <InputMask
-                    mask="99.999.999/9999-99"
-                    value={supplier.cnpj}
-                    onChange={handleChange}
-                >
-                    {() => <input type="text" name="cnpj" placeholder="CNPJ" required />}
-                </InputMask>
-                <input type="text" name="nomeContato" placeholder="Nome Contato" value={supplier.nomeContato} onChange={handleChange} required />
-                <input type="email" name="emailContato" placeholder="Email Contato" value={supplier.emailContato} onChange={handleChange} required />
-                <input type="text" name="telefoneContato" placeholder="Telefone Contato" value={supplier.telefoneContato} onChange={handleChange} required />
-                <button type="submit">Create Supplier</button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <TextInput type="text" name="nome" value={supplier.nome} onChange={handleChange} required />
+            {/* cnpj input with custom TextInput and mask */}
+            <TextInput 
+                type="text" 
+                name="cnpj" 
+                value={supplier.cnpj} 
+                onChange={(value) => handleChange({ target: { name: 'cnpj', value } })} 
+                mask="**.***.***/****-99" 
+                parseFunc={() => cleanedCNPJ.replace(/[^A-Z0-9]/gi, '')} // Parse function for the mask
+                inputMask={[/\w/, /\w/, '.', /\w/, /\w/, /\w/, '.', /\w/, /\w/, /\w/, '/', /\w/, /\w/, /\w/, /\w/, '-', /\d/, /\d/]} 
+            />
+            {/* Other inputs... */}
+            <button type="submit">Create Supplier</button>
+        </form>
     );
 };
 

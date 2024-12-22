@@ -1,41 +1,50 @@
 package com.example.supplier.util;
 
-public class CodigoUtil {
+import java.text.ParseException;
 
-    public static boolean isValidCNPJ(long cnpj) {
-        String cnpjStr = String.format("%014d", cnpj);
-        if (cnpjStr.length() != 14) {
+public class CNPJValidator {
+
+    public static boolean isValidCNPJ(String cnpj) {
+        // Check length and convert to uppercase before proceeding with the rest of the logic
+        if (cnpj == null || !cnpj.matches("[A-Z0-9]{14}")) {
             return false;
         }
+        cnpj = cnpj.toUpperCase(); // Ensure CNPJ is in uppercase
 
         int[] weight1 = {5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
         int[] weight2 = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
 
         try {
-            int sum = 0;
-            for (int i = 0; i < 12; i++) {
-                sum += Character.getNumericValue(cnpjStr.charAt(i)) * weight1[i];
-            }
+            int sum1 = calculateSum(cnpj.substring(0, 12), weight1);
+            int mod1 = (sum1 % 11) == 0 ? 0 : 11 - (sum1 % 11);
+            char firstDigitChar = Character.forDigit(mod1, 10);
 
-            int mod = sum % 11;
-            char firstDigit = (mod < 2) ? '0' : (char) ((11 - mod) + '0');
+            sum1 += Character.getNumericValue(cnpj.charAt(12)) * weight1[weight1.length - 1];
 
-            sum = 0;
-            for (int i = 0; i < 13; i++) {
-                sum += Character.getNumericValue(cnpjStr.charAt(i)) * weight2[i];
-            }
+            int sum2 = calculateSum(cnpj.substring(0, 13), weight2);
+            int mod2 = (sum2 % 11) == 0 ? 0 : 11 - (sum2 % 11);
+            char secondDigitChar = Character.forDigit(mod2, 10);
 
-            mod = sum % 11;
-            char secondDigit = (mod < 2) ? '0' : (char) ((11 - mod) + '0');
-
-            return cnpjStr.charAt(12) == firstDigit && cnpjStr.charAt(13) == secondDigit;
-        } catch (Exception e) {
+            // Check the check digits
+            return cnpj.charAt(13) == firstDigitChar && cnpj.charAt(14) == secondDigitChar;
+        } catch (IndexOutOfBoundsException e) {
             return false;
+        } catch (ParseException ex) {
+            throw new RuntimeException("Failed to parse CNPJ", ex);
         }
     }
 
-    public static void main(String[] args) {
-        long cnpj = 12345678000195L; // Example CNPJ
-        System.out.println("CNPJ is valid: " + isValidCNPJ(cnpj));
+    private static int calculateSum(String cnpj, int[] weightArray) throws ParseException {
+        int sum = 0;
+        for (int i = 0; i < cnpj.length(); ++i) {
+            char digitChar = cnpj.charAt(i); // Convert to ASCII code and subtract by 48 as needed
+            if ((digitChar >= 'A' && digitChar <= 'Z')) {
+                int numericValue = (int) (digitChar - 'A') + 10;
+                sum += numericValue * weightArray[i];
+            } else {
+                sum += Character.getNumericValue(cnpj.charAt(i)) * weightArray[i]; // Use direct conversion for digits
+            }
+        }
+        return sum;
     }
 }
